@@ -5,7 +5,7 @@ from sqlalchemy.orm import declarative_base # A base declarativa cria um víncul
 Base = declarative_base()
 
 # classe da tabela danalista modelo. 
-class login(Base):
+class login_table(Base):
 
     # O atributo __tablename__ informa ao SQLAlchemy qual é o nome exato da tabela lá no MySQL
     __tablename__ = "d_analista" # ← exatamente igual ao MySQLante
