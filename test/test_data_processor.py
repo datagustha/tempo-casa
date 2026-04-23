@@ -52,5 +52,6 @@ def test_processar_dataall():
         # print(type(login))
         df = _processar_arquivo(operadores)
         print(df)
+        print(df.columns)
 
     assert operadores is not None

@@ -163,13 +163,15 @@ def fetch_dataall():
                 if operador.atividade == "ativo" and admissao_valida:
 
                     data = {
-                        "login"     : operador.loguin,
-                        "nome"      : operador.nome_completo,
-                        "admissao"  : operador.admissao,
-                        "banco"     : operador.banco,
-                        "atividade" : operador.atividade,
-                        "imagem"    : operador.imagem,
-                        "email"     : operador.email,
+                        "login"      : operador.loguin,
+                        "nome"       : operador.nome_completo,
+                        "admissao"   : operador.admissao,
+                        "aniversario": operador.aniversario,
+                        "banco"      : operador.banco,
+                        "atividade"  : operador.atividade,
+                        "imagem"     : operador.imagem,
+                        "email"      : operador.email,
+                        
 
                     }
                     lista_operadores.append(data)

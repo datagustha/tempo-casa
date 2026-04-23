@@ -19,8 +19,10 @@ class login_table(Base):
     jornada = Column(String(255))    # ← coluna legada
     turno = Column(String(255))      # ← turno do operador (M=Manhã, T=Tarde, N=Noite)
     admissao = Column(String(255))   # ← data
+    aniversario = Column(Date)
     banco = Column(String(255))      # ← 'SEMEAR', 'AGORACRED' ou 'ADM'
     atividade = Column(String(255))  # ← se está ativo ou não
     imagem = Column(String(255))     # ← imagem do operador
     email = Column(String(255))      # ← email operador
+    
    

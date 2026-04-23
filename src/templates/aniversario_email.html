@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feliz Aniversário | SiM Facilita</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #f0ebf7;
+      font-family: 'Nunito', sans-serif;
+      padding: 24px 12px;
+    }
+
+    .wrapper {
+      max-width: 580px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px -10px rgba(100, 40, 140, 0.18);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      background: linear-gradient(160deg, #ede0f8 0%, #f8f2ff 55%, #e8d9f5 100%);
+      padding: 32px 28px 20px;
+      text-align: center;
+      overflow: hidden;
+      min-height: 340px;
+    }
+
+    /* confetti dots decorativos */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle, #c49fe0 1.5px, transparent 1.5px),
+        radial-gradient(circle, #f0d060 1.5px, transparent 1.5px),
+        radial-gradient(circle, #a970cc 1px, transparent 1px);
+      background-size: 40px 40px, 55px 55px, 30px 30px;
+      background-position: 10px 8px, 25px 22px, 5px 35px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* ── LOGO ── */
+    .logo-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo-bar img {
+      height: 36px;
+    }
+
+    .stars {
+      color: #f5c842;
+      font-size: 16px;
+      letter-spacing: 2px;
+    }
+
+    /* ── BALÕES (decoração) ── */
+    .balloons-top {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      font-size: 80px;
+      line-height: 1;
+      opacity: 0.85;
+      transform: rotate(10deg);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .balloons-left {
+      position: absolute;
+      bottom: 0px;
+      left: -14px;
+      font-size: 64px;
+      line-height: 1;
+      opacity: 0.75;
+      transform: rotate(-12deg);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ── TÍTULO PARABÉNS ── */
+    .parabens-script {
+      font-family: 'Great Vibes', cursive;
+      font-size: 64px;
+      color: #6b2fa0;
+      line-height: 1.1;
+      position: relative;
+      z-index: 2;
+      text-shadow: 0 2px 12px rgba(107, 47, 160, 0.15);
+      margin-bottom: 4px;
+    }
+
+    /* ── NOME ── */
+    .person-name {
+      font-family: 'Nunito', sans-serif;
+      font-size: 30px;
+      font-weight: 900;
+      color: #5a1e8c;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 22px;
+      letter-spacing: -0.5px;
+    }
+
+    /* ── FOTO CIRCULAR ── */
+    .photo-circle-wrap {
+      position: relative;
+      z-index: 2;
+      display: inline-block;
+      margin: 0 auto;
+    }
+
+    .photo-ring {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 5px solid #9c4dcc;
+      padding: 4px;
+      background: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 30px -8px rgba(107, 47, 160, 0.3);
+    }
+
+    .photo-ring img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* fallback quando não há foto */
+    .photo-placeholder {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #c9f99c, #a8e06a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+    }
+
+    /* lavanda decorativa */
+    .lavender-deco {
+      position: absolute;
+      bottom: -16px;
+      right: -28px;
+      font-size: 48px;
+      opacity: 0.6;
+      transform: rotate(15deg);
+    }
+
+    /* ── CORPO DA MENSAGEM ── */
+    .body-section {
+      padding: 28px 28px 20px;
+      background: white;
+    }
+
+    .message-box {
+      background: #faf6ff;
+      border-radius: 20px;
+      padding: 20px 20px 16px;
+      border: 1px solid #e5d4f5;
+    }
+
+    .message-box p {
+      font-size: 15px;
+      color: #3a2a50;
+      line-height: 1.65;
+      text-align: center;
+    }
+
+    .highlight-bold {
+      color: #6b2fa0;
+      font-weight: 900;
+    }
+
+    .feliz-aniversario {
+      display: block;
+      font-family: 'Nunito', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: #6b2fa0;
+      margin: 14px 0 4px;
+      text-align: center;
+    }
+
+    /* ── CONFETTI LINE ── */
+    .confetti-strip {
+      text-align: center;
+      font-size: 22px;
+      letter-spacing: 6px;
+      padding: 12px 0;
+    }
+
+    /* ── ASSINATURA ── */
+    .footer-sig {
+      background: #6b2fa0;
+      padding: 20px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .footer-sig p {
+      font-size: 14px;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .footer-sig strong {
+      font-size: 15px;
+      opacity: 1;
+      letter-spacing: 0.3px;
+    }
+
+    .footer-bar {
+      background: #f5f0fc;
+      text-align: center;
+      font-size: 11px;
+      color: #9a82b8;
+      padding: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .parabens-script { font-size: 48px; }
+      .person-name { font-size: 24px; }
+      .photo-ring { width: 130px; height: 130px; }
+      .body-section { padding: 20px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <!-- ═══ HERO ═══ -->
+    <div class="hero">
+      <!-- Logo + estrelas -->
+      <div class="logo-bar">
+        <img
+          src="https://i.ibb.co/8nrdb35g/sim-cred-branco.png"
+          alt="SiM Facilita"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+        />
+        <span style="display:none; font-weight:900; color:#6b2fa0; font-size:18px;">SiM FACILITA</span>
+        <div class="stars">★★★★★</div>
+      </div>
+
+      <!-- Balões decorativos -->
+      <div class="balloons-top">🎈🎈<br>🎈</div>
+      <div class="balloons-left">🎈<br>🎈🎈</div>
+
+      <!-- Título -->
+      <div class="parabens-script">Parabéns</div>
+
+      <!-- NOME DINÂMICO — substitua aqui -->
+      <div class="person-name">{{NOME}}</div>
+
+      <!-- Foto circular -->
+      <div class="photo-circle-wrap">
+        <div class="photo-ring">
+          <!-- FOTO DINÂMICA: se não vier foto, mostra emoji -->
+          <img
+            src="{{FOTO_URL}}"
+            alt="Foto"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div class="photo-placeholder" style="display:none;">🌿</div>
+        </div>
+        <div class="lavender-deco">💐</div>
+      </div>
+    </div>
+
+    <!-- ═══ CORPO ═══ -->
+    <div class="body-section">
+      <div class="confetti-strip">🎊🎉🎊🎉🎊</div>
+
+      <div class="message-box">
+        <p>
+          Que este novo ciclo seja de<br>
+          <span class="highlight-bold">muitas conquistas</span>.<br>
+          Aproveite cada momento<br>
+          deste dia especial.
+        </p>
+        <span class="feliz-aniversario">🎂 Feliz Aniversário! 🎂</span>
+      </div>
+
+      <div style="margin-top: 16px; background:#f3fde8; border-radius: 18px; padding: 16px; text-align: center; border: 1px solid #c5e89a;">
+        <p style="font-size: 14px; color: #3a6020; line-height: 1.6;">
+          🧡 Agradecemos pela sua energia e comprometimento!<br>
+          Continue brilhando, <strong>{{NOME}}</strong>! 🌟
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══ RODAPÉ ═══ -->
+    <div class="footer-sig">
+      <p>Com carinho,<br><strong>Equipe SiM Facilita 💜</strong></p>
+    </div>
+    <div class="footer-bar">
+      Dashboard · Sistema de Gestão | Facilita sua experiência
+    </div>
+
+  </div>
+</body>
+</html>

@@ -148,3 +148,37 @@ def calcular_tempo_casa(df: pd.DataFrame) -> dict:
         "data_admissao": admissao,
         "dias_restantes_proximo_ano": 365 - (dias % 365)
     }
+
+# ================================================================
+# 3. FUNÇÃO PARA CALCULAR ANIVERSÁRIO
+# ================================================================
+
+# ================================================================
+# 3. FUNÇÃO PARA VERIFICAR ANIVERSÁRIO (CORRIGIDA)
+# ================================================================
+
+def verificar_aniversario(data_hoje: date, data_aniversario: date):
+    """
+    Verifica se hoje é o aniversário do operador.
+    
+    Args:
+        data_hoje (date): Data atual
+        data_aniversario (date): Data de nascimento do operador (pode ser None)
+    
+    Returns:
+        str or False: Mensagem de aniversário se for hoje, False caso contrário
+    """
+    
+    # 👇 PRIMEIRO: verifica se data_aniversario é None
+    if data_aniversario is None:
+        return False
+    
+    # 👇 SÓ DEPOIS tenta acessar .day e .month
+    if (data_aniversario.day == data_hoje.day and 
+        data_aniversario.month == data_hoje.month):
+        
+        msg = "🎂 Feliz Aniversário! 🎂"
+        return msg
+    
+    return False
+        

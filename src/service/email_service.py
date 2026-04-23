@@ -1,7 +1,9 @@
 """
 SERVIÇO DE ENVIO DE E-MAILS
 ============================
-Responsável por enviar e-mails de comemoração (1 mês, 6 meses, aniversário de admissão).
+Responsável por enviar e-mails de comemoração:
+- Tempo de casa (1 mês, 6 meses, anos de empresa)
+- Aniversário pessoal (com template email_niver.html)
 """
 
 import smtplib
@@ -28,57 +30,83 @@ TEMPLATES_DIR = Path(__file__).parent.parent / "templates"
 
 
 # ================================================================
-# FUNÇÃO AUXILIAR: Carregar template HTML
+# FUNÇÃO: Enviar e-mail de ANIVERSÁRIO (email_niver.html)
 # ================================================================
 
-def _carregar_template(tipo: str, nome: str, login: str, imagem: str, anos: int = None):
+def enviar_aniversario(destinatario: str, nome: str, login: str = None, imagem: str = None):
     """
-    Carrega o template HTML e substitui os placeholders.
-    
-    Args:
-        tipo: '1mes', '6meses', ou 'aniversario'
-        nome: Nome do operador
-        login: Login do operador
-        imagem: URL da imagem do operador
-        anos: Número de anos (apenas para tipo 'aniversario')
-    
-    Returns:
-        str: HTML com placeholders substituídos
+    Envia e-mail de aniversário.
     """
-    if tipo == "1mes":
-        template_path = TEMPLATES_DIR / "email_1mes.html"
-    elif tipo == "6meses":
-        template_path = TEMPLATES_DIR / "email_6meses.html"
-    else:  # aniversario
-        template_path = TEMPLATES_DIR / "email_aniversario.html"
     
-    # Ler o arquivo HTML
-    with open(template_path, 'r', encoding='utf-8') as f:
-        html = f.read()
+    template_path = TEMPLATES_DIR / "email_niver.html"
     
-    # Substituir placeholders
+    try:
+        with open(template_path, 'r', encoding='utf-8') as f:
+            html = f.read()
+    except FileNotFoundError:
+        print(f"  ❌ Template não encontrado: {template_path}")
+        return False
+    
+    # Substitui o nome
     html = html.replace("{{NOME}}", nome)
-    html = html.replace("{{LOGIN}}", login)
-    html = html.replace("{{IMAGEM}}", imagem if imagem else "")
     
-    if tipo == "aniversario" and anos:
-        html = html.replace("{{ANOS}}", str(anos))
+    # Substitui a foto
+    if imagem and imagem.strip():
+        html = html.replace("{{IMAGEM}}", imagem)
+    else:
+        # Placeholder se não tiver foto
+        html = html.replace("{{IMAGEM}}", "https://i.ibb.co/placeholder.png")
     
-    return html
+    assunto = f"🎂 Feliz Aniversário, {nome.split()[0]}! - SiM Facilita"
+    
+    texto_plain = f"""
+{nome}
 
+Que este novo ciclo seja de muitas conquistas.
+Aproveite cada momento deste día.
+
+Feliz Aniversário!
+
+Agradecemos pela sua dedicação e comprometimento!
+
+Atenciosamente,
+Equipe SiM Facilita
+"""
+    
+    try:
+        msg = MIMEMultipart('alternative')
+        msg['From'] = EMAIL_REMETENTE
+        msg['To'] = destinatario
+        msg['Subject'] = assunto
+        
+        msg.attach(MIMEText(texto_plain, 'plain', 'utf-8'))
+        msg.attach(MIMEText(html, 'html', 'utf-8'))
+        
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server.starttls()
+        server.login(EMAIL_REMETENTE, EMAIL_SENHA)
+        server.send_message(msg)
+        server.quit()
+        
+        print(f"  ✅ Cartão de aniversário enviado para {nome}")
+        return True
+        
+    except Exception as e:
+        print(f"  ❌ Falha ao enviar: {str(e)}")
+        return False
 
 # ================================================================
-# FUNÇÃO 1: Enviar e-mail de comemoração
+# FUNÇÃO: Enviar e-mail de TEMPO DE CASA (1 mês, 6 meses, anos)
 # ================================================================
 
-def enviar_comemoracao_email(destinatario: str, nome: str, login: str, mensagem: str, imagem: str = None):
+def enviar_tempo_casa(destinatario: str, nome: str, login: str, mensagem: str, imagem: str = None):
     """
-    Envia um e-mail de comemoração para o operador usando template HTML.
+    Envia e-mail comemorativo de tempo de casa.
     
     Args:
-        destinatario: E-mail do operador (ex: roseli@gmail.com)
-        nome: Nome completo do operador (ex: ROSELI BATISTA DOS SANTOS)
-        login: Login do operador (ex: 2552ROSELI)
+        destinatario: E-mail do operador
+        nome: Nome completo
+        login: Login do operador
         mensagem: Mensagem de comemoração (ex: "🎉 1 mês de casa! 🎉")
         imagem: URL da imagem do operador (opcional)
     
@@ -86,37 +114,35 @@ def enviar_comemoracao_email(destinatario: str, nome: str, login: str, mensagem:
         bool: True se enviou, False se falhou
     """
     
-    # Define o tipo e assunto baseado na mensagem
+    # Define qual template usar baseado na mensagem
     if "1 mês" in mensagem:
-        tipo = "1mes"
+        template_path = TEMPLATES_DIR / "email_1mes.html"
         assunto = "🎉 1 mês de casa! - Parabéns!"
     elif "6 meses" in mensagem:
-        tipo = "6meses"
+        template_path = TEMPLATES_DIR / "email_6meses.html"
         assunto = "🎉 6 meses de casa! - Parabéns!"
-    elif "ano(s)" in mensagem:
-        tipo = "aniversario"
-        # Extrair o número de anos da mensagem (ex: "🎉 3 ano(s) de casa! 🎉")
-        import re
-        anos_match = re.search(r'(\d+)', mensagem)
-        anos = int(anos_match.group(1)) if anos_match else 0
-        assunto = f"🎉 {anos} anos de casa! - Parabéns!"
+    elif "ano" in mensagem:
+        template_path = TEMPLATES_DIR / "email_aniversario_empresa.html"
+        assunto = f"🎉 {mensagem} - Parabéns!"
     else:
-        tipo = "1mes"
-        assunto = "🎉 Parabéns! - Tempo de Casa"
-        anos = None
+        print(f"  ⚠️ Tipo de comemoração não identificado para {nome}")
+        return False
     
-    # Carregar o template HTML
-    html = _carregar_template(tipo, nome, login, imagem, anos if tipo == "aniversario" else None)
-    
+    # Ler o template
     try:
-        # 1. Criar a mensagem
-        msg = MIMEMultipart('alternative')
-        msg['From'] = EMAIL_REMETENTE
-        msg['To'] = destinatario
-        msg['Subject'] = assunto
-        
-        # 2. Versão em texto simples (fallback)
-        texto_plain = f"""
+        with open(template_path, 'r', encoding='utf-8') as f:
+            html = f.read()
+    except FileNotFoundError:
+        print(f"  ❌ Template não encontrado: {template_path}")
+        return False
+    
+    # Substituir placeholders
+    html = html.replace("{{NOME}}", nome)
+    html = html.replace("{{LOGIN}}", login)
+    html = html.replace("{{IMAGEM}}", imagem if imagem else "")
+    
+    # Versão em texto simples
+    texto_plain = f"""
 Olá {nome} (login: {login})!
 
 {mensagem}
@@ -127,21 +153,25 @@ Continue com o ótimo trabalho!
 
 ---
 
-Dashboard - Sistema de Gestão
+Dashboard - Sistema de Gestão | SiM Facilita
 """
-        msg.attach(MIMEText(texto_plain, 'plain', 'utf-8'))
+    
+    try:
+        msg = MIMEMultipart('alternative')
+        msg['From'] = EMAIL_REMETENTE
+        msg['To'] = destinatario
+        msg['Subject'] = assunto
         
-        # 3. Versão em HTML
+        msg.attach(MIMEText(texto_plain, 'plain', 'utf-8'))
         msg.attach(MIMEText(html, 'html', 'utf-8'))
         
-        # 4. Conectar ao servidor do Gmail e enviar
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
         server.starttls()
         server.login(EMAIL_REMETENTE, EMAIL_SENHA)
         server.send_message(msg)
         server.quit()
         
-        print(f"  ✅ E-mail enviado para {nome} ({destinatario})")
+        print(f"  ✅ E-mail de tempo de casa enviado para {nome} ({destinatario})")
         return True
         
     except Exception as e:
@@ -150,7 +180,7 @@ Dashboard - Sistema de Gestão
 
 
 # ================================================================
-# FUNÇÃO 2: Testar configuração de e-mail
+# FUNÇÃO DE TESTE
 # ================================================================
 
 def enviar_email_teste(destinatario: str):
@@ -171,9 +201,10 @@ def enviar_email_teste(destinatario: str):
     <body style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
         <h2 style="color: #7d3d96;">🧪 Teste de Configuração</h2>
         <p>Sua configuração de e-mail está funcionando corretamente!</p>
-        <p>Agora você pode enviar e-mails de comemoração para os operadores.</p>
+        <p>✅ Envio de aniversário (email_niver.html)</p>
+        <p>✅ Envio de tempo de casa</p>
         <hr>
-        <p style="color: #777; font-size: 12px;">Dashboard - Sistema de Gestão</p>
+        <p style="color: #777; font-size: 12px;">Dashboard - SiM Facilita</p>
     </body>
     </html>
     """
@@ -199,3 +230,8 @@ def enviar_email_teste(destinatario: str):
     except Exception as e:
         print(f"❌ Falha no e-mail de teste: {str(e)}")
         return False
+
+
+# ================================================================
+# EXEMPLO DE COMO USAR NO MAIN
+# ================================================================

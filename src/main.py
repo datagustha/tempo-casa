@@ -22,7 +22,8 @@ load_dotenv()
 from src.service.db_service import fetch_dataall
 from src.analysis.data_processor import _processar_arquivo
 from src.service.analytics_service import verificar_marco
-from src.service.email_service import enviar_comemoracao_email
+from src.service.email_service import enviar_aniversario, enviar_tempo_casa
+from src.service.analytics_service import verificar_aniversario
 
 
 def main():
@@ -50,11 +51,31 @@ def main():
 
         nome = row["nome"]
         admissao = row["admissao"]
-        print(f"{index} - {nome}: Ad: {admissao}")
+        aniversario = row["aniversario"]
+        print(f"{index} - {nome}: Ad: {admissao} - Niver: {aniversario if aniversario else 'Não cadastrado'}")
 
         # verifiar se completou 
 
         verificar_tempo_casa = verificar_marco(admissao, hoje)
+        verifica_niver = verificar_aniversario(hoje, aniversario)
+
+        if verifica_niver:
+            # pegar os dados do operador
+            email = row["email"]
+            nome = row["nome"]
+            login = row["login"]
+            msg = verifica_niver
+
+            enviar_aniversario(
+            destinatario=email,
+            nome=nome,
+            imagem=row.get("imagem")  # URL da foto do operador
+        )
+
+            print(f"✅ Mensagem de aniversário enviado para {email}")
+
+            
+
 
         if verificar_tempo_casa:
 
@@ -65,7 +86,7 @@ def main():
             msg = verificar_tempo_casa[0]
 
              # Enviar para o OPERADOR
-            enviar_comemoracao_email(
+            enviar_tempo_casa(
                 destinatario=email,
                 nome=nome,
                 login=login,
@@ -75,7 +96,7 @@ def main():
 
             # Enviar para o ADM (cópia)
             email_ADM = "adm@simfacilita.com.br"  # 👈 CORRIGIDO!
-            enviar_comemoracao_email(
+            enviar_tempo_casa(
                 destinatario=email_ADM,
                 nome=nome,
                 login=login,
@@ -85,7 +106,7 @@ def main():
 
             # Enviar para o ADM (cópia)
             email_financeiro = "financeiro@simfacilita.com.br"  # 👈 CORRIGIDO!
-            enviar_comemoracao_email(
+            enviar_tempo_casa(
                 destinatario=email_financeiro,
                 nome=nome,
                 login=login,
