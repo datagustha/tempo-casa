@@ -72,6 +72,22 @@ def main():
             imagem=row.get("imagem")  # URL da foto do operador
         )
 
+            # Enviar para o ADM (cópia)
+            email_ADM = "adm@simfacilita.com.br"  # 👈 CORRIGIDO!
+            enviar_aniversario(
+            destinatario=email_ADM,
+            nome=nome,
+            imagem=row.get("imagem")  # URL da foto do operador
+        )
+
+            # Enviar para o ADM (cópia)
+            email_financeiro = "financeiro@simfacilita.com.br"  # 👈 CORRIGIDO!
+            enviar_aniversario(
+                destinatario=email_financeiro,
+                nome=nome,
+                imagem=row.get("imagem")  # URL da foto do operador
+            )
+
             print(f"✅ Mensagem de aniversário enviado para {email}")
 
             
