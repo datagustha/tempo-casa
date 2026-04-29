@@ -65,6 +65,9 @@ logging.basicConfig(
     ]
 )
 
+# Cria o logger com o nome deste módulo (__name__ = "scheduler")
+log = logging.getLogger(__name__)
+
 # ─────────────────────────────────────────────
 # FUNÇÃO JOB — O QUE RODA EM CADA EXECUÇÃO
 # ─────────────────────────────────────────────
